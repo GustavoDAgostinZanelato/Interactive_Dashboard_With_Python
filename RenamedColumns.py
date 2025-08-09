@@ -1,15 +1,15 @@
-RENNAMED_COLUMNS = {
+RENAMED_COLUMNS = {
     'work_year': 'Ano',
-    'experience_level': 'Nível de Experiência',
-    'employment_type': 'Tipo de Emprego',
+    'experience_level': 'Nivel_Experiencia',
+    'employment_type': 'Tipo_Emprego',
     'job_title': 'Cargo',
-    'salary': 'Salário',
+    'salary': 'Salario',
     'salary_currency': 'Moeda',
-    'salary_in_usd': 'Salário em USD',
-    'employee_residence': 'Residência do Funcionário',
-    'remote_ratio': 'Proporção de Trabalho Remoto',
-    'company_location': 'Localização da Empresa',
-    'company_size': 'Tamanho da Empresa',
+    'salary_in_usd': 'Salario_USD',
+    'employee_residence': 'Residencia_Funcionario',
+    'remote_ratio': 'Proporcao_Trabalho_Remoto',
+    'company_location': 'Localização_Empresa',
+    'company_size': 'Tamanho_Empresa',
 }
 
 RENAMED_COMPANY_SIZE = {

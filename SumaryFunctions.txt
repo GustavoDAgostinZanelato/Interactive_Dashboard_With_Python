@@ -1,6 +1,4 @@
-#Ler o documento .csv
-df = pd.read_csv("https://raw.githubusercontent.com/guilhermeonrails/data-jobs/refs/heads/main/salaries.csv")
-
+# 1 AULA - BIBLIOTECA PANDAS
 # --------------------------------------------------------------------
 # Exibindo cabeçalho do .csv
 # --------------------------------------------------------------------
@@ -14,11 +12,12 @@ information = df.info()
 print(information)
 
 # --------------------------------------------------------------------
-# Análises estatísitcas dos dados do documento
+# Análises estatísticas dos dados do documento
 # --------------------------------------------------------------------
-tableDescription = df.describe()
-valueDescription = df.describe(include="object")
-print(description)
+tableDescription = df.describe()                 # mostra datalhes da tabela
+valueDescription = df.describe(include="object") # mostra detalhes dos dados
+print(tableDescription)
+print(valueDescription)
 
 # --------------------------------------------------------------------
 # "df.shape" retorna uma tupla com a qtd de linhas e colunas da tabela
@@ -29,7 +28,7 @@ print(f"Linhas: {lines} \nColunas: {collumns}")
 # --------------------------------------------------------------------
 # Exibe o nome de todas as colunas  do documento
 # --------------------------------------------------------------------
-df.rename(columns=RENNAMED_COLLUMNS, inplace=True)
+df.rename(columns=RENAMED_COLUMNS, inplace=True)
 collumns = df.columns
 print(collumns)
 
@@ -42,3 +41,20 @@ EmploymentCount = df["Employment Type"].value_counts()
 print(EmploymentCount)
 companySizeCount = df["Company Size"].value_counts()
 print(companySizeCount)
+
+
+
+
+
+#AULA 2 - LIMPEZA DE DADOS
+# --------------------------------------------------------------------
+# Exibe valores nulos na dataframe
+# --------------------------------------------------------------------
+null = df.isnull()
+print(null)
+nullQuantiy = df.isnull().sum() #retorna as colunas e a qtd de valores nulos em cada
+print(nullQuantiy)
+
+print(df[df.isnull().any(axis=1)]) #exibe as colunas com valores nulos
+
+   
