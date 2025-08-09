@@ -1,0 +1,44 @@
+#Ler o documento .csv
+df = pd.read_csv("https://raw.githubusercontent.com/guilhermeonrails/data-jobs/refs/heads/main/salaries.csv")
+
+# --------------------------------------------------------------------
+# Exibindo cabeçalho do .csv
+# --------------------------------------------------------------------
+header = df.head(10) #--> 10 primeiras linhas. O default são as 5 primeiras linhas
+print(header)
+
+# --------------------------------------------------------------------
+# Informação da tipagem dos dados
+# --------------------------------------------------------------------
+information = df.info()
+print(information)
+
+# --------------------------------------------------------------------
+# Análises estatísitcas dos dados do documento
+# --------------------------------------------------------------------
+tableDescription = df.describe()
+valueDescription = df.describe(include="object")
+print(description)
+
+# --------------------------------------------------------------------
+# "df.shape" retorna uma tupla com a qtd de linhas e colunas da tabela
+# --------------------------------------------------------------------
+lines, collumns = df.shape[0], df.shape[1]
+print(f"Linhas: {lines} \nColunas: {collumns}")
+
+# --------------------------------------------------------------------
+# Exibe o nome de todas as colunas  do documento
+# --------------------------------------------------------------------
+df.rename(columns=RENNAMED_COLLUMNS, inplace=True)
+collumns = df.columns
+print(collumns)
+
+# --------------------------------------------------------------------
+# Conta quantos valores possui na coluna especificada
+# --------------------------------------------------------------------
+expCount = df["Experience Level"].value_counts()
+print(expCount)
+EmploymentCount = df["Employment Type"].value_counts()
+print(EmploymentCount)
+companySizeCount = df["Company Size"].value_counts()
+print(companySizeCount)
