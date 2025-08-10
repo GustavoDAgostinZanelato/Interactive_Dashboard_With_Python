@@ -57,4 +57,24 @@ print(nullQuantiy)
 
 print(df[df.isnull().any(axis=1)]) #exibe as colunas com valores nulos
 
-   
+
+
+
+
+#AULA 3 - Criação de Gráficos
+# --------------------------------------------------------------------
+# Cria um gráfico do tipo barplot
+# --------------------------------------------------------------------
+sns.barplot(data=dfClean, x="Nivel_Experiencia", y="Salario_USD", order=chartOrder) # Cria o layout do gráfico usando o seaborn
+plt.show()                                                                          # Exibe a tela com o matplotlib
+
+# --------------------------------------------------------------------
+# Ordenando o gráfico por Nivel_Experiencia crescente
+# --------------------------------------------------------------------
+chartOrder = dfClean.groupby('Nivel_Experiencia')['Salario_USD'].mean().sort_values(ascending=True).index
+
+plt.figure(figsize=(8,5))
+sns.barplot(data=dfClean, x="Nivel_Experiencia", y="Salario_USD", order=chartOrder) # Cria o layout do gráfico usando o seaborn
+plt.title("Salário médio por senioridade")
+plt.xlabel("Senioridade"), plt.ylabel("Salário médio anual (USD)")
+plt.show()                                                                          # Exibe a tela com o matplotlib
