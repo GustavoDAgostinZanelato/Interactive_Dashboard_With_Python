@@ -1,83 +1,149 @@
+import streamlit as st
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-# import plotly.express as px
-from RenamedColumns import RENAMED_COLUMNS, RENAMED_COMPANY_SIZE, RENAMED_EMPLOYMENT_TYPE, RENAMED_EXPERIENCE_LEVEL, RENAMED_REMOTE_RATIO
+import plotly.express as px
 
-#Reading the .csv file
-df = pd.read_csv("https://raw.githubusercontent.com/guilhermeonrails/data-jobs/refs/heads/main/salaries.csv")
- 
+#-----------------------------------------------------------------------------------------------------------------------
+# --- Configuração da Página ---
+#-----------------------------------------------------------------------------------------------------------------------
+st.set_page_config(
+    page_title="Dashboard de Salários com Área de Dados",
+    page_icon="📊",
+    layout="wide"
+)
 
-def renamingColumns():
-    df.rename(columns=RENAMED_COLUMNS, inplace=True)
-
-    replacements = {
-        "Tamanho_Empresa": RENAMED_COMPANY_SIZE,
-        "Proporcao_Trabalho_Remoto": RENAMED_REMOTE_RATIO,
-        "Tipo_Emprego": RENAMED_EMPLOYMENT_TYPE,
-        "Nivel_Experiencia": RENAMED_EXPERIENCE_LEVEL
-    }
-
-    for col, mapping in replacements.items():
-        df[col] = df[col].replace(mapping)
+df = pd.read_csv("https://raw.githubusercontent.com/vqrca/dashboard_salarios_dados/refs/heads/main/dados-imersao-final.csv")
 
 
-def dataCleaning():
-    dfClean = (
-        df.dropna() # Removing the 10 null values
-        .astype({'Ano': "int64", "Salario": "float64", "Salario_USD": "float64"}) # Changing the type of the columns
-    )
-    return dfClean
- 
+#-----------------------------------------------------------------------------------------------------------------------
+# --- Barra Lateral (Filtros) ---
+#-----------------------------------------------------------------------------------------------------------------------
+st.sidebar.header("🔍 Filtros")
 
-def tableChats():
-    # Criando uma figura para encaixar os gráficos
-    fig, axs = plt.subplots(2, 2, figsize=(14,10))
-    fig.suptitle("Análise Salarial")
+# Filtros de Ano
+availableYears = sorted(df['ano'].unique())
+SelectedYears = st.sidebar.multiselect("Ano", availableYears, default=availableYears)
 
-    # Gráfico de barras Nivel_Experiencia x Salario_USD
-    chartOrder = dfClean.groupby('Nivel_Experiencia')['Salario_USD'].mean().sort_values(ascending=True).index
-    sns.barplot(data=dfClean, x="Nivel_Experiencia", y="Salario_USD", order=chartOrder, ax=axs[0, 0])
-    axs[0, 0].set_title("Salário médio por senioridade")
-    axs[0, 0].set_xlabel("Senioridade")
-    axs[0, 0].set_ylabel("Salário médio anual (USD)")
+# Filtros de Senioridade
+availableExpLevel = sorted(df['senioridade'].unique())
+selectedExpLevel = st.sidebar.multiselect("Senioridade", availableExpLevel, default=availableExpLevel)
 
-    # Histograma Frequência dos salários Salario_USD
-    sns.histplot(dfClean['Salario_USD'], bins=50, kde=True, ax=axs[0, 1]) #"Bins" é a largura das dolunas. "KDE" é a linha mestra do gráfico
-    axs[0, 1].set_title("Distribuição anual dos salários")
-    axs[0, 1].set_xlabel("Salário em USD")
-    axs[0, 1].set_ylabel("Frequência")
+# Filtro por Tipo de Contrato
+availableContracts = sorted(df["contrato"].unique())
+selectedContracts = st.sidebar.multiselect("Tipo de Contrato", availableContracts, default=availableContracts)
 
-    # Boxplot Frequência dos salários Salario_USD
-    sns.boxplot(x=dfClean['Salario_USD'], ax=axs[1, 0])
-    axs[1, 0].set_title("Boxplot Salário USD Anual")
-    axs[1, 0].set_xlabel("Salário em USD")
+# Filtro por Tamanho da Empresa
+availableSize = sorted(df['tamanho_empresa'].unique())
+selectedSize = st.sidebar.multiselect("Tamanho da Empresa", availableSize, default=availableSize)
 
-    # Boxplot Distribuição dos salários por senioridade
-    expLevelOrder = ["Júnior", "Pleno", "Sênior", "Executivo"]
-    sns.boxplot(x="Nivel_Experiencia", y="Salario_USD", data=dfClean, order=expLevelOrder, palette="Set2", hue="Nivel_Experiencia", ax=axs[1, 1])
-    axs[1, 1].set_title("Distribuição por Senioridade")
-    axs[1, 1].set_xlabel("Nível de Experiência")
-    axs[1, 1].set_ylabel("Salário em USD")
-
-    plt.tight_layout()  # Junta as subfiguras a figura principal
-    charts = plt.show() # variável com a tela formada
-    return charts      
+# Aplicando os filtros as informações da página
+filtered_df = df[
+    (df["ano"].isin(SelectedYears)) &
+    (df["senioridade"].isin(selectedExpLevel)) &
+    (df["contrato"].isin(selectedContracts)) &
+    (df["tamanho_empresa"].isin(selectedSize))
+]
 
 
-if __name__ == "__main__":
-    renamingColumns()
-    dfClean = dataCleaning()
+#-----------------------------------------------------------------------------------------------------------------------
+# --- Conteúdo Principal da Página ---
+#-----------------------------------------------------------------------------------------------------------------------
+st.title("Dashboard de Análise de Salários na Área de Dados")
+st.markdown("Explore os dados salariais na área de dados nos últimos anos. Utilize os filtros à esquerda para refinar sua análise.")
 
-    print("-" * 200 + "\n TABLE \n" + "-" * 200)
-    print(dfClean.head())
-    lines, columns = dfClean.shape[0], dfClean.shape[1]
-    print(f"{lines} lines | {columns} columns")
+st.subheader("Métricas gerais (Salário anual em USD)")
 
-    # print("\n" + "-" * 200 + "\n TABLE DESCRIPTION \n" + "-" * 200)
-    # print(dfClean.describe())
+if not filtered_df.empty:
+    salario_medio = filtered_df['usd'].mean()
+    salario_maximo = filtered_df['usd'].max()
+    total_registros = filtered_df.shape[0]
+    cargo_mais_frequente  = filtered_df['cargo'].mode()[0]
+else:
+    salario_medio, salario_maximo, total_registros, cargo_mais_frequente = 0, 0, 0, ""
 
-    # print("\n" + "-" * 200 + "\n COLUMNS TYPE INFOS \n" + "-" * 200)
-    # print(dfClean.info())
+col1, col2, col3, col4 = st.columns(4)
+col1.metric("Salário Médio", f"${salario_medio:,.0f}")
+col2.metric("Salário Máximo", f"${salario_maximo:,.0f}")
+col3.metric("Total de Registros", f"${total_registros:,.0f}")
+col4.metric("Cargo mais Frequente", cargo_mais_frequente)
 
-    charts = tableChats()
+st.markdown("---")
+
+
+# --- Gráficos com Plotly ---
+st.subheader("Gráficos")
+
+col_graf1, col_graf2 = st.columns(2)
+
+with col_graf1:
+    if not filtered_df.empty:
+        top_jobs = filtered_df.groupby('cargo')['usd'].mean().nlargest(10).sort_values(ascending=True).reset_index()
+        job_chart = px.bar(
+            top_jobs, 
+            x='usd', 
+            y='cargo', 
+            orientation="h", 
+            title="Top 10 cargos por salário médio",
+            labels={'usd': "Média salarial anual (USD)", "cargo": ""}
+        )
+        job_chart.update_layout(title_x = 0.1, yaxis={'categoryorder':'total ascending'})
+        st.plotly_chart(job_chart, use_container_width=True)
+    else:
+        st.warning("Nenhum dado para exibir no gráfico de cargos.")
+
+with col_graf2:
+    if not filtered_df.empty:
+        hist_chart = px.histogram(
+            filtered_df,
+            x='usd',
+            nbins = 30,
+            title = "Distribuição de salários anuais",
+            labels={'usd': 'Faixa salarial (USD)', 'count': ''}
+        )
+        hist_chart.update_layout(title = 0.1)
+        st.plotly_chart(hist_chart, use_container_width=True)
+       
+    else:
+        st.warning("Nenhum dado para exibir no gráfico de distribuição.")
+
+
+col_graf3, col_graf4 = st.columns(2)
+
+with col_graf3:
+    if not filtered_df.empty:
+        remote_count = filtered_df['remoto'].value_counts().reset_index()
+        remote_count.columns = ['tipo_trabalho', 'quantidade']
+        remote_chart = px.pie(
+            remote_count,
+            names = 'tipo_trabalho',
+            values = 'quantidade',
+            title = "Proporção dos tipos de trabalho",
+        )
+        remote_chart.update_traces(textinfo='percent+label')
+        remote_chart.update_layout(title=0.1)
+        st.plotly_chart(remote_chart, use_container_width=True)
+       
+    else:
+        st.warning("Nenhum dado para exibir no gráfico dos tipos de trabalho.")
+
+with col_graf4:
+    if not filtered_df.empty:
+        df_ds = filtered_df[filtered_df['cargo'] == 'Data Scientist']
+        avg_country_ds = df_ds.groupby('residencia_iso3')['usd'].mean().reset_index()
+        country_chart = px.choropleth(
+            avg_country_ds,
+            locations = 'residencia_iso3',
+            color = 'usd',
+            color_continuous_scale='rdylgn',
+            title='Salário médio de Cientista de Dados por país',
+            labels={'usd': 'Salário médio (USD)', 'residencia_iso3': 'País'}
+        )
+        country_chart.update_layout(title=0.1)
+        st.plotly_chart(country_chart, use_container_width=True)
+       
+    else:
+        st.warning("Nenhum dado para exibir no gráfico de países.")
+
+
+# --- Tabela de Dados Detalhados ---
+st.subheader("Dados Detalhados")
+st.dataframe(filtered_df)
