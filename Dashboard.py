@@ -11,7 +11,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# df = pd.read_csv("https://raw.githubusercontent.com/vqrca/dashboard_salarios_dados/refs/heads/main/dados-imersao-final.csv")
+
 df = pd.read_csv("https://github.com/GustavoDAgostinZanelato/Interactive_Dashboard_With_Python/blob/master/salaryData.csv")
 
 
