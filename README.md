@@ -81,7 +81,7 @@ pip install -r requirements.txt
 Para rodar o projeto localmente, execute:
 
 ``` bash
-streamlit run app.py
+streamlit run .\dashboard.py
 ```
 
 O Streamlit abrirá automaticamente o dashboard no navegador em:\
