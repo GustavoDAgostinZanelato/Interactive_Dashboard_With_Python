@@ -9,7 +9,7 @@ considerando variáveis como **ano, senioridade, tipo de contrato e
 tamanho da empresa**, de forma simples e visual.
 
 🔗 O dashboard pode ser acessado online através do link:\
-👉 [Dashboard de Salários na Área de
+[Dashboard de Salários na Área de
 Dados](https://dashboard-de-salarios-com-area-de-dados.streamlit.app/)
 
 ------------------------------------------------------------------------
@@ -57,7 +57,6 @@ Dados](https://dashboard-de-salarios-com-area-de-dados.streamlit.app/)
 
 ``` bash
 git clone https://github.com/GustavoDAgostinZanelato/Interactive_Dashboard_With_Python.git
-cd Interactive_Dashboard_With_Python
 ```
 
 2.  Crie um ambiente virtual (opcional, mas recomendado):
@@ -65,7 +64,7 @@ cd Interactive_Dashboard_With_Python
 ``` bash
 python -m venv venv
 source venv/bin/activate   # Linux/Mac
-venv\Scriptsctivate      # Windows
+venv\Scripts\Activate      # Windows
 ```
 
 3.  Instale as dependências:
@@ -81,11 +80,11 @@ pip install -r requirements.txt
 Para rodar o projeto localmente, execute:
 
 ``` bash
-streamlit run .\dashboard.py
+streamlit run .\Dashboard.py
 ```
 
 O Streamlit abrirá automaticamente o dashboard no navegador em:\
-👉 `http://localhost:8501`
+`http://localhost:8501`
 
 ------------------------------------------------------------------------
 
