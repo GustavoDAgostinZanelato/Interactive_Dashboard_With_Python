@@ -12,7 +12,7 @@ st.set_page_config(
 )
 
 
-df = pd.read_csv("https://github.com/GustavoDAgostinZanelato/Interactive_Dashboard_With_Python/blob/master/salaryData.csv")
+df = pd.read_csv("https://raw.githubusercontent.com/GustavoDAgostinZanelato/Interactive_Dashboard_With_Python/refs/heads/master/salaryData.csv")
 
 
 #-----------------------------------------------------------------------------------------------------------------------
